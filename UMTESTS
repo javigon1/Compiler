@@ -1,0 +1,3 @@
+A UMTESTS file which lists each of your UM unit tests, one test per line. Specifically, each line must
+be the name of a file with the .um extension. The name must be properly capitalized to match the
+name of the file you are submitting. Do not list the names of data files with extensions like .0 or .1.
