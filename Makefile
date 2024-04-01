@@ -8,7 +8,7 @@ CFLAGS  = -g -std=gnu99 -Wall -Wextra -Werror -Wfatal-errors -pedantic $(IFLAGS)
 LDFLAGS = -g -L/comp/40/build/lib -L/usr/sup/cii40/lib64
 LDLIBS  = -l40locality -lcii40 -lm -lbitpack
 
-INCLUDES = $(shell echo *.h) # add .h files here
+INCLUDES = $(shell echo *.h) Segment.h IO.h Instruction_stream.h
 
 ############### Rules ###############
 

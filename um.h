@@ -5,8 +5,9 @@
 #include <stdlib.h>
 #include <inttypes.h>
 #include "seq.h"
+#include <bitpack.h>
 
 /* run the program */
-int um();
+void um();
 
 #endif 
