@@ -6,11 +6,11 @@
 #include <inttypes.h>
 #include "seq.h"
 #include <bitpack.h>
-
-
-typedef struct Registers *Registers;
+#include "instructions.h"
+#include "memory.h"
 
 /* run the program */
-void um();
+Instruction extract(uint32_t word, Instruction instruction);
+int um();
 
 #endif 

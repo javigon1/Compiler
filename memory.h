@@ -15,7 +15,7 @@ Memory Segment_new();
 void Segment_free(Segment memory);
 uint32_t Segment_map();
 void Segment_unmap();
-int Segment_length();
+
 
 
 #endif
