@@ -3,10 +3,10 @@
 # 
 CC = gcc
 
-IFLAGS  = -I/comp/40/build/include -I/usr/sup/cii40/include/cii
+IFLAGS = -I/comp/40/include -I/usr/sup/cii40/include/cii
 CFLAGS  = -g -std=gnu99 -Wall -Wextra -Werror -Wfatal-errors -pedantic $(IFLAGS)
 LDFLAGS = -g -L/comp/40/build/lib -L/usr/sup/cii40/lib64
-LDLIBS  = -l40locality -lcii40 -lm -lbitpack
+LDLIBS = -lbitpack -lnetpbm -lcii40 -lm -lrt
 
 INCLUDES = $(shell echo *.h) memory.h instructions.h loadProgram.h
 
