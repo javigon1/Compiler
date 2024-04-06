@@ -4,5 +4,7 @@
 #include "memory.h"
 #include "loadProgram.h"
 #include "instructions.h"
+#include <assert.h>
+#include <sys/stat.h>
 
 #endif 

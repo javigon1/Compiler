@@ -5,11 +5,6 @@ struct Instruction {
         Um_instruction word;
 };
 
-struct Register {
-        uint32_t registers[8];
-};
-
-
 Um_instruction three_register(Um_opcode op, int ra, int rb, int rc) 
 {
         /* generate a bitpacked UM instruction using provided opcode and
@@ -37,13 +32,39 @@ Um_instruction loadval(unsigned ra, unsigned val)
         return newVal;
 }
 
-void conditional_move(Register registers, Instruction instruction)
+void conditional_move(uint32_t registers[8], Instruction instruction)
 {
         unsigned ra = Bitpack_getu(instruction.word, 3, 6);
         unsigned rb = Bitpack_getu(instruction.word, 3, 3);
         unsigned rc = Bitpack_getu(instruction.word, 3, 0);
 
-        if (registers->registers[rc] != 0) {
-                registers->registers[ra] = registers->registers[rb];
+        if (registers[rc] != 0) {
+                registers[ra] = registers[rb];
+        }   
+}
+
+
+void halt()
+{
+       exit(0);
+}
+
+void output(uint32_t registers[8], Instruction instruction)
+{
+        unsigned rc = Bitpack_getu(instruction.word, 3, 0);
+        uint32_t value = registers[rc];
+
+        if (value <= 255) {
+                putchar((char)value);
+        } else {
+                fprintf(stderr, "Error: Value in register %u is out of"
+                                "range for output.\n", rc);
         }
+}
+
+void load_value(uint32_t registers[8], Instruction instruction)
+{
+        unsigned ra = Bitpack_getu(instruction.word, 3, 28);
+        uint32_t value = Bitpack_getu(instruction.word, 25, 0);
+        registers[ra] = value;
 }
