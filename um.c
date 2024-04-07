@@ -2,7 +2,6 @@
 
 int main(int argc, char *argv[])
 {
-        uint32_t registers[8];
         // think about maybe putting the array of registers inside the 
         // memory struct
 
@@ -32,7 +31,6 @@ int main(int argc, char *argv[])
 
         (void)argc;
         (void)fp;
-        (void)registers; 
         (void)numInstructions;
         return EXIT_SUCCESS; 
 }
