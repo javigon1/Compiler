@@ -45,8 +45,10 @@ uint32_t segment_map(Memory memory, uint32_t size)
 }
 
 
-void segment_unmap(Memory memory)
+void segment_unmap(Memory memory, uint32_t segmentID)
 {
-        assert(memory->segments;)
+        assert(memory->segments);
                                                                                 /* do we need to assert the unmappedIDs too? */
+        Seq_addlo(memory->unmappedIDs, (void *)(uintptr_t)segmentID);
+
 }
