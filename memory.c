@@ -11,22 +11,25 @@ Memory segment_new()
 {
         Memory memory;
         NEW(memory);
-        memory->segments = Seq_new(0);
+        memory->segments = Seq_new(1);
         memory->unmappedIDs = Seq_new(0);
         memory->program_counter = 0;
 
         return memory;
 }
 
-// doubt this works
-uint32_t segment_map(Memory memory)
+
+uint32_t segment_map(Memory memory, uint32_t size)
 {
-    uint32_t segmentID;
-    if (Seq_length(memory->unmappedIDs) > 0) {
-        segmentID = (uint32_t)(uintptr_t)Seq_remlo(memory->unmappedIDs);
-    } else {
-        segmentID = Seq_length(memory->segments);
-        Seq_addhi(memory->segments, NULL);
-    }
-    return segmentID;
+        assert(memory->segments);
+        /* check if there is an unmapped ID so we don't have to create another */
+        if (Seq_length(memory->unmappedIDs) > 0) {
+                Seq_T unmapped_segment = Seq_remhi(memory->unmappedIDs);
+                Seq_free(&unmapped_segment);
+                Seq_addlo(memory->segments, Seq_new(size));
+                return (memory->program_counter)++;
+        } 
+
+        Seq_addlo(memory->segments, Seq_new(size));
+        return (memory->program_counter)++;
 }

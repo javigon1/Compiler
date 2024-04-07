@@ -11,6 +11,6 @@
 typedef struct Memory *Memory;
 
 Memory segment_new();
-uint32_t segment_map(Memory memory);
+uint32_t segment_map(Memory memory, uint32_t size);
 
 #endif
