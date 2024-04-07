@@ -23,7 +23,7 @@ void segment_free(Memory memory)
         Seq_free(&memory->segments);
         Seq_free(&memory->unmappedIDs);
         FREE(memory);
-}
+}                                                                               /* check these two functions */
 
 
 uint32_t segment_map(Memory memory, uint32_t size)
@@ -33,6 +33,7 @@ uint32_t segment_map(Memory memory, uint32_t size)
         if (Seq_length(memory->unmappedIDs) > 0) {
                 /* empty the information in that segment */
                 Seq_T unmapped_segment = Seq_remhi(memory->unmappedIDs);
+                                                                                /* is it okay to free this memory and create another sequence or are they looking for something else? */
                 Seq_free(&unmapped_segment);
                 /* add a new segment with given size */
                 Seq_addlo(memory->segments, Seq_new(size));
@@ -41,4 +42,11 @@ uint32_t segment_map(Memory memory, uint32_t size)
 
         Seq_addlo(memory->segments, Seq_new(size));
         return (memory->program_counter)++;
+}
+
+
+void segment_unmap(Memory memory)
+{
+        assert(memory->segments;)
+                                                                                /* do we need to assert the unmappedIDs too? */
 }
