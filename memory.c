@@ -18,14 +18,23 @@ Memory segment_new()
         return memory;
 }
 
+void segment_free(Memory memory)
+{
+        Seq_free(&memory->segments);
+        Seq_free(&memory->unmappedIDs);
+        FREE(memory);
+}
+
 
 uint32_t segment_map(Memory memory, uint32_t size)
 {
         assert(memory->segments);
         /* check if there is an unmapped ID so we don't have to create another */
         if (Seq_length(memory->unmappedIDs) > 0) {
+                /* empty the information in that segment */
                 Seq_T unmapped_segment = Seq_remhi(memory->unmappedIDs);
                 Seq_free(&unmapped_segment);
+                /* add a new segment with given size */
                 Seq_addlo(memory->segments, Seq_new(size));
                 return (memory->program_counter)++;
         } 
