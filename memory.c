@@ -34,14 +34,14 @@ uint32_t segment_map(Memory memory, uint32_t size)
                 /* empty the information in that segment */
                 Seq_T unmapped_segment = Seq_remhi(memory->unmappedIDs);
                                                                                 /* is it okay to free this memory and create another sequence or are they looking for something else? */
-                Seq_free(&unmapped_segment);
+                Seq_free(&unmapped_segment);                                    /* instead o the line 35 and 37 should I just say: uint32_t segmentID = (uint32_t)(uintptr_t)Seq_remlo(memory->unmappedIDs) - avodid the free ?*/
                 /* add a new segment with given size */
                 Seq_addlo(memory->segments, Seq_new(size));
-                return (memory->program_counter)++;
+                return segmentID;
         } 
 
         Seq_addlo(memory->segments, Seq_new(size));
-        return (memory->program_counter)++;
+        return Seq_length(memory->segments) - 1;
 }
 
 
@@ -49,6 +49,6 @@ void segment_unmap(Memory memory, uint32_t segmentID)
 {
         assert(memory->segments);
                                                                                 /* do we need to assert the unmappedIDs too? */
-        Seq_addlo(memory->unmappedIDs, (void *)(uintptr_t)segmentID);
+        Seq_addlo(memory->unmappedIDs, (void *)(uintptr_t)segmentID);           /* do we need to remove it from the */
 
 }
