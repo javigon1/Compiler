@@ -10,9 +10,13 @@
 
 typedef struct Memory *Memory;
 
-Memory segment_new();
-void segment_free(Memory memory);
+Memory new_memory();
+void free_memory(Memory memory);
 uint32_t segment_map(Memory memory, uint32_t size);
 void segment_unmap(Memory memory, uint32_t segmentID);
+uint32_t get_register(Memory memory, uint32_t register_index);
+void set_register(Memory memory, uint register_index, uint32_t value);
+Seq_T get_segments(Memory memory);
+void set_segments(Memory memory, Seq_T segments);
 
 #endif

@@ -60,25 +60,74 @@ Um_instruction loadval(unsigned ra, unsigned val)
         return newVal;
 }
 
-
 /* Wrapper functions for each of the instructions */
-static inline Um_instruction halt(void) 
+static inline Um_instruction HALT2(void) 
 {
         return three_register(HALT, 0, 0, 0);
 }
 
 typedef enum Um_register { r0 = 0, r1, r2, r3, r4, r5, r6, r7 } Um_register;
 
-static inline Um_instruction add(Um_register a, Um_register b, Um_register c) 
+static inline Um_instruction ADD2(Um_register a, Um_register b, Um_register c) 
 {
         return three_register(ADD, a, b, c);
 }
 
 
 /* output wrapper function */
-static inline Um_instruction output(Um_register c) 
+static inline Um_instruction OUT2(Um_register c) 
 {
         return three_register(OUT, 0, 0, c);
+}
+
+static inline Um_instruction DIV2(Um_register a, Um_register b, Um_register c) 
+{
+        return three_register(DIV, a, b, c);
+}
+
+static inline Um_instruction MUL2(Um_register a, Um_register b, Um_register c) 
+{
+        return three_register(MUL, a, b, c);
+}
+
+static inline Um_instruction NAND2(Um_register a, Um_register b, Um_register c) 
+{
+        return three_register(NAND, a, b, c);
+}
+
+static inline Um_instruction ACTIVATE2(Um_register b, Um_register c) 
+{
+        return three_register(ACTIVATE, 0, b, c);
+}
+
+static inline Um_instruction INACTIVATE2(Um_register c) 
+{
+        return three_register(INACTIVATE, 0, 0, c);
+}
+
+static inline Um_instruction IN2(Um_register c) 
+{
+        return three_register(IN, 0, 0, c);
+}
+
+static inline Um_instruction LOADP2(Um_register b, Um_register c) 
+{
+        return three_register(LOADP, 0, b, c);
+}
+
+static inline Um_instruction SLOAD2(Um_register a, Um_register b, Um_register c) 
+{
+        return three_register(SLOAD, a, b, c);
+}
+
+static inline Um_instruction SSTORE2(Um_register a, Um_register b, Um_register c) 
+{
+        return three_register(SSTORE, a, b, c);
+}
+
+static inline Um_instruction CMOV2(Um_register a, Um_register b, Um_register c) 
+{
+        return three_register(CMOV, a, b, c);
 }
 
 
@@ -105,23 +154,29 @@ void Um_write_sequence(FILE *output, Seq_T stream)
 
 void build_halt_test(Seq_T stream)
 {
-        append(stream, halt());
-}
-
-void build_conditional_test(Seq_T stream)
-{
-        append(stream, halt());
+        append(stream, HALT2());
 }
 
 void build_output_test(Seq_T stream) 
 {
-        append(stream, output(r2));
-        append(stream, halt());
+        append(stream, OUT2(r2));
+        append(stream, HALT2());
 }
 
 void build_load_value_test(Seq_T stream) 
 {
         append(stream, loadval(r2, 48));
-        append(stream, output(r2));
-        append(stream, halt());
+        append(stream, OUT2(r2));
+        append(stream, HALT2());
+}
+
+void build_conditional_test(Seq_T stream)
+{
+        append(stream, loadval(r0, 1));
+        append(stream, loadval(r1, 2));
+        append(stream, loadval(r2, 3));
+        append(stream, OUT2(r1));
+        append(stream, CMOV2(r0, r1, r2));
+        append(stream, OUT2(r1));
+        append(stream, HALT2());
 }

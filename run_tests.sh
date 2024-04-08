@@ -1,6 +1,6 @@
 #!/bin/sh
 
-UM_EXECUTABLE="./um"
+UM_EXECUTABLE="um"
 TESTS_DIRECTORY="."
 
 # Get a list of all .um files in the current directory

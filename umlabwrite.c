@@ -10,10 +10,10 @@
 
 extern void Um_write_sequence(FILE *output, Seq_T instructions);
 
-extern void build_conditional_test(Seq_T instructions);
 extern void build_halt_test(Seq_T instructions);
 extern void build_output_test(Seq_T instructions);
 extern void build_load_value_test(Seq_T instructions);
+extern void build_conditional_test(Seq_T instructions);
 
 
 
@@ -25,10 +25,10 @@ static struct test_info {
         /* writes instructions into sequence */
         void (*build_test)(Seq_T stream);
 } tests[] = {
-        { "conditional",        NULL,     "", build_conditional_test },
         { "halt",               NULL,     "", build_halt_test},
         { "output",             NULL,     "", build_output_test},
-        { "load_value",         NULL,     "0", build_load_value_test}
+        { "load_value",         NULL,     "0", build_load_value_test},
+        { "conditional",        NULL,     "", build_conditional_test}
 };
 
   

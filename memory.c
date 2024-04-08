@@ -8,7 +8,7 @@ struct Memory {
 };
 
 
-Memory segment_new()
+Memory new_memory()
 {
         Memory memory;
         NEW(memory);
@@ -19,7 +19,7 @@ Memory segment_new()
         return memory;
 }
 
-void segment_free(Memory memory)
+void free_memory(Memory memory)
 {
         Seq_free(&memory->segments);
         Seq_free(&memory->unmappedIDs);
@@ -56,4 +56,31 @@ void segment_unmap(Memory memory, uint32_t segmentID)
                                                                                 /* do we need to assert the unmappedIDs too? */
         Seq_addlo(memory->unmappedIDs, (void *)(uintptr_t)segmentID);           /* do we need to remove it from the */
 
+}
+
+
+uint32_t get_register(Memory memory, uint32_t register_index)
+{
+        assert(register_index < 8);
+        return memory->registers[register_index];
+}
+
+
+void set_register(Memory memory, uint register_index, uint32_t value)
+{
+        assert(register_index < 8);
+        memory->registers[register_index] = value;
+}
+
+
+Seq_T get_segments(Memory memory) {
+        assert(memory);
+        return memory->segments;
+}
+
+
+void set_segments(Memory memory, Seq_T segments) {
+        assert(memory);
+        assert(segments);
+        memory->segments = segments;
 }

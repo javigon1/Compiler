@@ -1,9 +1,6 @@
 #include "instructions.h"
+#include "memory.h"
 
-// struct Instruction {
-//         Um_opcode opcode;
-//         Um_instruction word;
-// };
 
 Um_instruction three_register(uint8_t op, uint32_t ra, uint32_t rb, uint32_t rc) 
 {
@@ -35,16 +32,27 @@ Um_instruction loadval(uint32_t ra, uint32_t val)
 
 void halt(Memory memory)
 {
-        segment_free(memory);
+        free_memory(memory);
         exit(0);
 }
+
 
 /* CODE A FUNCTION THAT USES THE BITPACK GET AND CALLS THE RESPECTIVE FUNCTION WITH ALL OF THE PARAMETERS NEEDED*/
 void conditional_move(Memory memory, uint32_t ra, uint32_t rb, uint32_t rc)
 {
-        if (memory->registers[rc] != 0) {
-                memory->registers[ra] = memory->registers[rb];
+        if (get_register(memory, rc) != 0) {
+                set_register(memory, ra, get_register(memory, rb));
         }
+}
+
+
+void segmented_load(Memory memory, uint32_t ra, uint32_t rb, uint32_t rc)
+{
+        uint32_t segmentID = get_register(memory, rb);
+        uint32_t offset = get_register(memory, rc);
+        Seq_T segment = Seq_get(get_segments(memory), segmentID);
+        uint32_t value = *((uint32_t*)Seq_get(segment, offset));
+        set_register(memory, ra, value);
 }
 
 // void conditional_move(uint32_t registers[8], Instruction instruction)
