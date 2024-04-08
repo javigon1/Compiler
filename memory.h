@@ -8,6 +8,7 @@
 #include "mem.h"
 #include <assert.h>
 
+/* memory struct declared here */
 typedef struct Memory *Memory;
 
 Memory new_memory();

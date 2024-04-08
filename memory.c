@@ -1,10 +1,12 @@
 #include "memory.h"
 
+#define NUM_REGISTERS 8
+
 struct Memory {
         Seq_T segments;
         Seq_T unmappedIDs;
         uint32_t program_counter;
-        uint32_t registers[8];
+        uint32_t registers[NUM_REGISTERS];
 };
 
 
@@ -15,6 +17,9 @@ Memory new_memory()
         memory->segments = Seq_new(1);
         memory->unmappedIDs = Seq_new(0);
         memory->program_counter = 0;
+        for (int i = 0; i < NUM_REGISTERS; i++) {
+                memory->registers[i] = 0;
+        }
 
         return memory;
 }
@@ -32,20 +37,13 @@ uint32_t segment_map(Memory memory, uint32_t size)
         assert(memory->segments);
         /* check if there is an unmapped ID so we don't have to create another */
         if (Seq_length(memory->unmappedIDs) > 0) {
-                /* empty the information in that segment */
-                // Seq_T unmapped_segment = Seq_remhi(memory->unmappedIDs);
-                //                                                                 /* is it okay to free this memory and create another sequence or are they looking for something else? */
-                // Seq_free(&unmapped_segment);                                    /* instead o the line 35 and 37 should I just say: uint32_t segmentID = (uint32_t)(uintptr_t)Seq_remlo(memory->unmappedIDs) - avodid the free ?*/
-                // /* add a new segment with given size */
-                // Seq_addlo(memory->segments, Seq_new(size));
-                // return (memory->program_counter)++;
                 uint32_t segmentID = (uint32_t)(uintptr_t)Seq_remlo(memory->unmappedIDs);
-                Seq_addlo(memory->segments, Seq_new(size));
+                Seq_put(memory->segments, segmentID, Seq_new(size));
                 return segmentID;
         } 
 
-        Seq_addlo(memory->segments, Seq_new(size));
-        return (memory->program_counter)++;
+        Seq_addhi(memory->segments, Seq_new(size));
+        return Seq_length(memory->segments) - 1;
 }
 
 
@@ -53,9 +51,10 @@ void segment_unmap(Memory memory, uint32_t segmentID)
 {
         assert(memory->segments);
         assert(memory->unmappedIDs);
-                                                                                /* do we need to assert the unmappedIDs too? */
-        Seq_addlo(memory->unmappedIDs, (void *)(uintptr_t)segmentID);           /* do we need to remove it from the */
-
+                     
+        Seq_T segment = Seq_put(memory->segments, segmentID, NULL);
+        Seq_free(&segment);
+        Seq_addhi(memory->unmappedIDs, (void *)(uintptr_t)segmentID);           /* do we need to remove it from the */
 }
 
 

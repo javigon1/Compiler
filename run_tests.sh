@@ -14,8 +14,16 @@ for testFile in $umFiles; do
     # Check if a corresponding .1 file exists
     if [ -f "$TESTS_DIRECTORY/$testName.1" ]; then
         # Run umdump on the .um file and redirect output to a .dump file
-        $UM_EXECUTABLE $testFile > $TESTS_DIRECTORY/$testName.dump
+        output=$($UM_EXECUTABLE $testFile)
+
+        # Print the test name and output
+        echo "Test: $testName"
+        echo "Output:"
+        echo "$output"
+        echo "-------------------------"
     else
         echo "$testName has no output!"
+        echo "-------------------------"
+        
     fi
 done

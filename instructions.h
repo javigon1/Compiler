@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include "bitpack.h"
+#include <assert.h>
 
 
 typedef uint32_t Um_instruction;
