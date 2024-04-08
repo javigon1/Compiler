@@ -7,6 +7,6 @@
 #include "memory.h"
 
 // CHANGE THIS TO MEMORY
-void load_program(Memory memory, FILE *fp, uint32_t program_size);
+void loadProgram(FILE *fp, Memory memory, uint32_t program_size);
 
 #endif

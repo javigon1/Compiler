@@ -15,7 +15,9 @@ int main(int argc, char *argv[])
 
         unsigned numInstructions = st.st_size / 32;
 
+        Memory memory = new_memory();
         FILE *fp = fopen(argv[1], "r"); 
+        loadProgram(fp, memory, numInstructions);
         /* INITIALIZE THE SEGMENT, the sequence[0] has to have size found */
         // set the program counter to 0
         // this is where I have to loop and get instructions one by one
