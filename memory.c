@@ -72,14 +72,21 @@ void set_register(Memory memory, uint register_index, uint32_t value)
 }
 
 
-Seq_T get_segments(Memory memory) {
+Seq_T get_segments(Memory memory) 
+{
         assert(memory);
         return memory->segments;
 }
 
 
-void set_segments(Memory memory, Seq_T segments) {
+void set_segments(Memory memory, int index, Seq_T segments) 
+{
         assert(memory);
         assert(segments);
-        memory->segments = segments;
+        Seq_put(memory->segments, index, segments);
+}
+
+void set_program_counter(Memory memory, uint32_t value)
+{
+        memory->program_counter = value;
 }

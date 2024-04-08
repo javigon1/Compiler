@@ -11,8 +11,10 @@
 
 typedef uint32_t Um_instruction;
 
-Um_instruction three_register(uint8_t op, uint32_t ra, uint32_t rb, uint32_t rc);
-Um_instruction loadval(unsigned ra, unsigned val);
+// Um_instruction three_register(uint8_t op, uint32_t ra, uint32_t rb, uint32_t rc);
+// Um_instruction loadval(unsigned ra, unsigned val);
+
+void execute_instruction(Memory memory, uint32_t instruction);
 
 void halt(Memory memory);
 void conditional_move(Memory memory, uint32_t ra, uint32_t rb, uint32_t rc);
@@ -24,6 +26,8 @@ void division(Memory memory, uint32_t ra, uint32_t rb, uint32_t rc);
 void nand(Memory memory, uint32_t ra, uint32_t rb, uint32_t rc);
 void output(Memory memory, uint32_t rc);
 void input(Memory memory, uint32_t rc);
+void load_program(Memory memory, uint32_t rb, uint32_t rc);
+void load_value(Memory memory, uint32_t ra, uint32_t value);
 
 
 #endif

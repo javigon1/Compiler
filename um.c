@@ -17,22 +17,22 @@ int main(int argc, char *argv[])
 
         Memory memory = new_memory();
         FILE *fp = fopen(argv[1], "r"); 
-        loadProgram(fp, memory, numInstructions);
-        /* INITIALIZE THE SEGMENT, the sequence[0] has to have size found */
-        // set the program counter to 0
-        // this is where I have to loop and get instructions one by one
-        // for (int i = 0; i < numInstructions; i++) {
-                // find opcode
-                // call the respective instruction
-        // }
+        Seq_T program = loadProgram(fp, numInstructions);
+        set_segments(memory, 0, program);
 
+        uint32_t program_length = Seq_length(program);
+
+        for (uint32_t i = 0; i < program_length; i++) {
+                uint32_t instruction = (uint32_t)(uintptr_t)Seq_get(program, i);
+                execute_instruction(memory, instruction);
+        }       
+        
+        
         //halt()
 
         //free the segment
         // free the array of registers
 
         (void)argc;
-        (void)fp;
-        (void)numInstructions;
         return EXIT_SUCCESS; 
 }

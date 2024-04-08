@@ -5,8 +5,9 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include "memory.h"
+#include <bitpack.h>
 
 // CHANGE THIS TO MEMORY
-void loadProgram(FILE *fp, Memory memory, uint32_t program_size);
+Seq_T loadProgram(FILE *fp, uint64_t program_size);
 
 #endif

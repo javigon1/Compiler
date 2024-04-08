@@ -18,6 +18,7 @@ void segment_unmap(Memory memory, uint32_t segmentID);
 uint32_t get_register(Memory memory, uint32_t register_index);
 void set_register(Memory memory, uint register_index, uint32_t value);
 Seq_T get_segments(Memory memory);
-void set_segments(Memory memory, Seq_T segments);
+void set_segments(Memory memory, int index, Seq_T segments);
+void set_program_counter(Memory memory, uint32_t value);
 
 #endif
