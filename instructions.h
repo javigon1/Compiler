@@ -24,6 +24,8 @@ void addition(Memory memory, uint32_t ra, uint32_t rb, uint32_t rc);
 void multiplication(Memory memory, uint32_t ra, uint32_t rb, uint32_t rc);
 void division(Memory memory, uint32_t ra, uint32_t rb, uint32_t rc);
 void nand(Memory memory, uint32_t ra, uint32_t rb, uint32_t rc);
+void map_segment(Memory memory, uint32_t rb, uint32_t rc);
+void unmap_segment(Memory memory, uint32_t rc);
 void output(Memory memory, uint32_t rc);
 void input(Memory memory, uint32_t rc);
 void load_program(Memory memory, uint32_t rb, uint32_t rc);

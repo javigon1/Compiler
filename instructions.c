@@ -64,10 +64,10 @@ void execute_instruction(Memory memory, uint32_t instruction)
                         halt(memory);
                         break;
                 case 8:
-                        segment_map(memory, value);
+                        map_segment(memory, rb, rc);
                         break;
                 case 9:
-                        segment_unmap(memory, value);
+                        unmap_segment(memory, rc);
                         break;
                 case 10:
                         output(memory, rc);
@@ -90,6 +90,7 @@ void execute_instruction(Memory memory, uint32_t instruction)
 
 void addition(Memory memory, uint32_t ra, uint32_t rb, uint32_t rc) {
 
+        assert(memory);
         /* get what is in register b and c */
         uint32_t b = get_register(memory, rb);
         uint32_t c = get_register(memory, rc);
@@ -104,6 +105,7 @@ void addition(Memory memory, uint32_t ra, uint32_t rb, uint32_t rc) {
 
 void multiplication(Memory memory, uint32_t ra, uint32_t rb, uint32_t rc)
 {
+        assert(memory);
         uint32_t b = get_register(memory, rb);
         uint32_t c = get_register(memory, rc);
         uint32_t result = (b * c) % UINT32_MAX;
@@ -114,6 +116,7 @@ void multiplication(Memory memory, uint32_t ra, uint32_t rb, uint32_t rc)
 
 void division(Memory memory, uint32_t ra, uint32_t rb, uint32_t rc)
 {
+        assert(memory);
         uint32_t b = get_register(memory, rb);
         uint32_t c = get_register(memory, rc);
         if (c == 0) {
@@ -128,6 +131,7 @@ void division(Memory memory, uint32_t ra, uint32_t rb, uint32_t rc)
 
 void nand(Memory memory, uint32_t ra, uint32_t rb, uint32_t rc)
 {
+        assert(memory);
         uint32_t b = get_register(memory, rb);
         uint32_t c = get_register(memory, rc);
         
@@ -140,6 +144,7 @@ void nand(Memory memory, uint32_t ra, uint32_t rb, uint32_t rc)
 
 void halt(Memory memory)
 {
+        assert(memory);
         free_memory(memory);
         exit(0);
 }
@@ -147,14 +152,14 @@ void halt(Memory memory)
 
 void output(Memory memory, uint32_t rc)
 {
-        /* check this assert statement */
-        assert(rc < 256);
+        assert(memory);
         putchar(get_register(memory, rc));
 }
 
 
 void input(Memory memory, uint32_t rc)
 {
+        assert(memory);
         int in = getchar();
         if (in >= 0 && in < 256 && in != EOF) {
                 set_register(memory, rc, in);
@@ -166,6 +171,7 @@ void input(Memory memory, uint32_t rc)
 
 void segmented_load(Memory memory, uint32_t ra, uint32_t rb, uint32_t rc)
 {
+        assert(memory);
         uint32_t segmentID = get_register(memory, rb);
         uint32_t offset = get_register(memory, rc);
         Seq_T segment = Seq_get(get_segments(memory), segmentID);
@@ -176,6 +182,7 @@ void segmented_load(Memory memory, uint32_t ra, uint32_t rb, uint32_t rc)
 
 void segmented_store(Memory memory, uint32_t ra, uint32_t rb, uint32_t rc)
 {
+        assert(memory);
         uint32_t value = get_register(memory, rc);
         uint32_t segmentID = get_register(memory, ra);
         uint32_t offset = get_register(memory, rb);
@@ -183,9 +190,27 @@ void segmented_store(Memory memory, uint32_t ra, uint32_t rb, uint32_t rc)
         *((uint32_t *)Seq_get(segment, offset)) = value;    
 }
 
+
+void map_segment(Memory memory, uint32_t rb, uint32_t rc)
+{
+        assert(memory);
+        uint32_t num_words = get_register(memory, rc);
+        uint32_t segmentID = segment_map(memory, num_words);
+
+        set_register(memory, rb, segmentID);
+}
+
+
+void unmap_segment(Memory memory, uint32_t rc)
+{
+        assert(memory);
+        segment_unmap(memory, get_register(memory, rc));
+}
+
 /* CODE A FUNCTION THAT USES THE BITPACK GET AND CALLS THE RESPECTIVE FUNCTION WITH ALL OF THE PARAMETERS NEEDED*/
 void conditional_move(Memory memory, uint32_t ra, uint32_t rb, uint32_t rc)
 {
+        assert(memory);
         if (get_register(memory, rc) != 0) {
                 set_register(memory, ra, get_register(memory, rb));
         }
@@ -194,6 +219,7 @@ void conditional_move(Memory memory, uint32_t ra, uint32_t rb, uint32_t rc)
 
 void load_program(Memory memory, uint32_t rb, uint32_t rc)
 {
+        assert(memory);
         uint32_t segmentID = get_register(memory, rb);
         Seq_T segment = Seq_get(get_segments(memory), segmentID);
 
@@ -211,5 +237,6 @@ void load_program(Memory memory, uint32_t rb, uint32_t rc)
 
 void load_value(Memory memory, uint32_t ra, uint32_t value)
 {
+        assert(memory);
         set_register(memory, ra, value);
 }
