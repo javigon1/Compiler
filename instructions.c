@@ -112,6 +112,8 @@ void division(Memory memory, uint32_t ra, uint32_t rb, uint32_t rc)
 
 void nand(Memory memory, uint32_t ra, uint32_t rb, uint32_t rc)
 {
+        fprintf(stderr, "In nand function\n");
+
         assert(memory);
         uint32_t b = get_register(memory, rb);
         uint32_t c = get_register(memory, rc);
@@ -127,6 +129,7 @@ void nand(Memory memory, uint32_t ra, uint32_t rb, uint32_t rc)
 
 void halt(Memory memory)
 {
+        fprintf(stderr, "In halt function\n");
         assert(memory);
         /* free memory and terminate the program */
         free_memory(memory);
@@ -138,12 +141,15 @@ void output(Memory memory, uint32_t rc)
 {
         assert(memory);
         /* print to stdout the value stored at register rc */
+        fprintf(stderr, "Before putchar\n");
         putchar(get_register(memory, rc));
 }
 
 
 void input(Memory memory, uint32_t rc)
 {
+        fprintf(stderr, "In input function\n");
+
         assert(memory);
         int in = getchar();
 
@@ -198,6 +204,7 @@ void unmap_segment(Memory memory, uint32_t rc)
 /* CODE A FUNCTION THAT USES THE BITPACK GET AND CALLS THE RESPECTIVE FUNCTION WITH ALL OF THE PARAMETERS NEEDED*/
 void conditional_move(Memory memory, uint32_t ra, uint32_t rb, uint32_t rc)
 {
+        fprintf(stderr, "In conditional move function\n");
         assert(memory);
         if (get_register(memory, rc) != 0) {
                 set_register(memory, ra, get_register(memory, rb));
@@ -206,29 +213,22 @@ void conditional_move(Memory memory, uint32_t ra, uint32_t rb, uint32_t rc)
 
 
 void load_program(Memory memory, uint32_t rb, uint32_t rc)
-{
+{ 
         assert(memory);
+        fprintf(stderr, "In load program function\n");
         uint32_t segmentID = get_register(memory, rb);
-        // fprintf(stderr, "RB: %d\n", rb);
-        // fprintf(stderr, "RC: %d\n", rc);
-        // fprintf(stderr, "Value of ID %u\n", segmentID);
-        Seq_T segment2 = Seq_get(get_segments(memory), 0);
-        // fprintf(stderr, "ERROR\n");
-        Seq_T segment = Seq_get(get_segments(memory), segmentID);
-
-        Seq_T duplicate_segment = Seq_new(Seq_length(segment));
-        for (int i = 0; i < Seq_length(segment); i++) {
-                uint32_t element = (uint32_t)(uintptr_t)Seq_get(segment, i);
-                // fprintf(stderr, "Value of i: %d\n", i);
-                // fprintf(stderr, "ELEMENT: %d\n", element);
-                Seq_addhi(duplicate_segment, (void *)(uintptr_t)(element));
-        }
-
-        (void)segment2;
-
-        segment_unmap(memory, 0);
-        set_segments(memory, 0, duplicate_segment);
-
+        if (segmentID != 0) {
+                Seq_T segment = Seq_get(get_segments(memory), segmentID);
+                Seq_T duplicate_segment = Seq_new(Seq_length(segment));
+                for (int i = 0; i < Seq_length(segment); i++) {
+                        uint32_t element = (uint32_t)(uintptr_t)Seq_get(segment, i);
+                        Seq_addhi(duplicate_segment, (void *)(uintptr_t)(element));
+                }
+                /* do not unmap 0 */
+                // segment_unmap(memory, 0);
+                Seq_free(Seq_get(get_segments(memory), 0));
+                set_segments(memory, 0, duplicate_segment);
+        }        
         set_pc(memory, get_register(memory, rc));
 }
 
