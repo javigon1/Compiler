@@ -94,8 +94,13 @@ Seq_T get_segments(Memory memory)
 void set_segments(Memory memory, int index, Seq_T segments) 
 {
         assert(memory);
+        assert(memory->segments);
         assert(segments);
-        Seq_put(memory->segments, index, segments);
+        if (index == 0 || index == Seq_length(memory->segments)) {
+                Seq_addhi(memory->segments, segments);
+        } else {
+                Seq_put(memory->segments, index, segments);
+        }
 }
 
 void set_program_counter(Memory memory, uint32_t value)
