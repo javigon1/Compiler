@@ -2,42 +2,19 @@
 #include "memory.h"
 
 
-// Um_instruction three_register(uint8_t op, uint32_t ra, uint32_t rb, uint32_t rc) 
-// {
-//         /* generate a bitpacked UM instruction using provided opcode and
-//         three register identifies */
-//         Um_instruction bitpacked = 0x0;
-//         bitpacked = Bitpack_newu(bitpacked, 4, 28, op);
-//         bitpacked = Bitpack_newu(bitpacked, 3, 0, rc);
-//         bitpacked = Bitpack_newu(bitpacked, 3, 3, rb);
-//         bitpacked = Bitpack_newu(bitpacked, 3, 6, ra);
-
-//         return bitpacked;
-// }
-
-
-// /* load val function */ 
-// Um_instruction loadval(uint32_t ra, uint32_t val) 
-// { 
-//         /* generate a bitpacked Load Value UM instruction. Recall that this 
-//         is the only UM instruction that has a different encoding format */ 
-//         Um_instruction newVal = 0x0;
-//         newVal = Bitpack_newu(newVal, 13, 28, 13);
-//         newVal = Bitpack_newu(newVal, 3, 25, ra);
-//         newVal = Bitpack_newu(newVal, 13, 0, val);
-        
-//         return newVal;
-// }
-
-
 void execute_instruction(Memory memory, uint32_t instruction)
 {
+        /* get the value of the instruction we have to perform */
         uint32_t opcode = Bitpack_getu(instruction, 4, 28);
+        /* get the values stored on every register */
         uint32_t ra = Bitpack_getu(instruction, 3, 6);
+        /* account for the different packing of words */
+        uint32_t raLV = Bitpack_getu(instruction, 3, 25);
         uint32_t rb = Bitpack_getu(instruction, 3, 3);
         uint32_t rc = Bitpack_getu(instruction, 3, 0);
         uint32_t value = Bitpack_getu(instruction, 25, 0);
         
+        /* simple case-switch function to run the specific function */
         switch(opcode) {
                 case 0:
                         conditional_move(memory, ra, rb, rc);
@@ -79,9 +56,10 @@ void execute_instruction(Memory memory, uint32_t instruction)
                         load_program(memory, rb, rc);
                         break;
                 case 13:
-                        load_value(memory, ra, value);
+                        load_value(memory, raLV, value);
                         break;
                 default:
+                        /* unaccounted number given */
                         fprintf(stderr, "Please input a valid instruction\n");
                         halt(memory);
         }
@@ -95,7 +73,7 @@ void addition(Memory memory, uint32_t ra, uint32_t rb, uint32_t rc) {
         uint32_t b = get_register(memory, rb);
         uint32_t c = get_register(memory, rc);
 
-        /* arithmetic for addition */
+        /* arithmetic for addition - mod 2^32 */
         uint32_t result = (b + c) % UINT32_MAX;
 
         /* put the result of the addition in register a */
@@ -106,10 +84,12 @@ void addition(Memory memory, uint32_t ra, uint32_t rb, uint32_t rc) {
 void multiplication(Memory memory, uint32_t ra, uint32_t rb, uint32_t rc)
 {
         assert(memory);
+        /* get the values in the respective registers */
         uint32_t b = get_register(memory, rb);
         uint32_t c = get_register(memory, rc);
+        /* multiply them and mod 2^32 */
         uint32_t result = (b * c) % UINT32_MAX;
-
+        /* save result in ra */
         set_register(memory, ra, result);
 }
 
@@ -119,6 +99,7 @@ void division(Memory memory, uint32_t ra, uint32_t rb, uint32_t rc)
         assert(memory);
         uint32_t b = get_register(memory, rb);
         uint32_t c = get_register(memory, rc);
+        /* account for whenever they try to divide by 0 */
         if (c == 0) {
                 fprintf(stderr, "Cannot divide by 0\n");
                 exit(0);
@@ -135,7 +116,9 @@ void nand(Memory memory, uint32_t ra, uint32_t rb, uint32_t rc)
         uint32_t b = get_register(memory, rb);
         uint32_t c = get_register(memory, rc);
         
+        /* and the values at both registers */
         uint32_t result = b & c;
+        /* get the complement of the result */
         uint32_t new_result = ~result;
 
         set_register(memory, ra, new_result);
@@ -145,6 +128,7 @@ void nand(Memory memory, uint32_t ra, uint32_t rb, uint32_t rc)
 void halt(Memory memory)
 {
         assert(memory);
+        /* free memory and terminate the program */
         free_memory(memory);
         exit(0);
 }
@@ -153,6 +137,7 @@ void halt(Memory memory)
 void output(Memory memory, uint32_t rc)
 {
         assert(memory);
+        /* print to stdout the value stored at register rc */
         putchar(get_register(memory, rc));
 }
 
@@ -161,10 +146,13 @@ void input(Memory memory, uint32_t rc)
 {
         assert(memory);
         int in = getchar();
-        if (in >= 0 && in < 256 && in != EOF) {
-                set_register(memory, rc, in);
-        } else {
+
+        /* if end of characters, store all 1s */
+        if (in == EOF) {
                 set_register(memory, rc, UINT32_MAX);
+        } else if (in >= 0 && in < 256 && in != EOF) {
+                /* store it in register rc */
+                set_register(memory, rc, in);
         }
 }
 

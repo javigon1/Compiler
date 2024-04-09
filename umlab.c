@@ -130,7 +130,6 @@ static inline Um_instruction CMOV_TEST(Um_register a, Um_register b, Um_register
         return three_register(CMOV, a, b, c);
 }
 
-
 /* Functions for working with streams */
 static inline void append(Seq_T stream, Um_instruction inst)
 {
