@@ -39,17 +39,23 @@ uint32_t segment_map(Memory memory, uint32_t size)
 {
         assert(memory);
         assert(memory->segments);
-        fprintf(stderr, "SIZE %d\n", size);
         /* check if there is an unmapped ID so we don't have to create another */
         if (Seq_length(memory->unmappedIDs) > 0) {
                 uint32_t segmentID = (uint32_t)(uintptr_t)Seq_remlo(memory->unmappedIDs);
-                /* put the sequence in the ID it corresponds in the "mapped" sequence */
-                Seq_put(memory->segments, segmentID, Seq_new(size));
+                Seq_T segment = Seq_new(size);
+                for (uint32_t i = 0; i < size; i++) {
+                Seq_addhi(segment, (void *)(uintptr_t)0);
+                }
+                /* put the initialized segment in the ID it corresponds to in the "mapped" sequence */
+                Seq_put(memory->segments, segmentID, segment);
                 return segmentID;
         } 
-        /* create a new sequence of the given size and add it to the end of the
-        sequence segments */
-        Seq_addhi(memory->segments, Seq_new(size));
+        Seq_T segment = Seq_new(size);
+        for (uint32_t i = 0; i < size; i++) {
+                Seq_addhi(segment, (void *)(uintptr_t)0);
+        }
+        Seq_addhi(memory->segments, segment);
+        
         /* return the index of the new segment */
         return Seq_length(memory->segments) - 1;
 }

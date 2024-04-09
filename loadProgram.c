@@ -4,7 +4,7 @@
 Seq_T loadProgram(FILE *fp, uint64_t program_size)
 {
         /* initialize the 0 segment's sequence */
-        Seq_T program = Seq_new(0);
+        Seq_T program = Seq_new(program_size);
 
         uint32_t word = 0;
         uint64_t instructions_read = 0;

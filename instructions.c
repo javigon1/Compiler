@@ -112,8 +112,6 @@ void division(Memory memory, uint32_t ra, uint32_t rb, uint32_t rc)
 
 void nand(Memory memory, uint32_t ra, uint32_t rb, uint32_t rc)
 {
-        fprintf(stderr, "In nand function\n");
-
         assert(memory);
         uint32_t b = get_register(memory, rb);
         uint32_t c = get_register(memory, rc);
@@ -129,7 +127,6 @@ void nand(Memory memory, uint32_t ra, uint32_t rb, uint32_t rc)
 
 void halt(Memory memory)
 {
-        fprintf(stderr, "In halt function\n");
         assert(memory);
         /* free memory and terminate the program */
         free_memory(memory);
@@ -141,15 +138,12 @@ void output(Memory memory, uint32_t rc)
 {
         assert(memory);
         /* print to stdout the value stored at register rc */
-        fprintf(stderr, "Before putchar\n");
         putchar(get_register(memory, rc));
 }
 
 
 void input(Memory memory, uint32_t rc)
 {
-        fprintf(stderr, "In input function\n");
-
         assert(memory);
         int in = getchar();
 
@@ -169,19 +163,19 @@ void segmented_load(Memory memory, uint32_t ra, uint32_t rb, uint32_t rc)
         uint32_t segmentID = get_register(memory, rb);
         uint32_t offset = get_register(memory, rc);
         Seq_T segment = Seq_get(get_segments(memory), segmentID);
-        uint32_t value = *((uint32_t*)Seq_get(segment, offset));
+        uint32_t value = (uint32_t)(uintptr_t)Seq_get(segment, offset);
         set_register(memory, ra, value);
 }
 
 
 void segmented_store(Memory memory, uint32_t ra, uint32_t rb, uint32_t rc)
 {
-        assert(memory);
+        assert(memory);     
         uint32_t value = get_register(memory, rc);
         uint32_t segmentID = get_register(memory, ra);
         uint32_t offset = get_register(memory, rb);
         Seq_T segment = Seq_get(get_segments(memory), segmentID);
-        *((uint32_t *)Seq_get(segment, offset)) = value;    
+        Seq_put(segment, offset, (void *)(uintptr_t)value);  
 }
 
 
@@ -204,7 +198,6 @@ void unmap_segment(Memory memory, uint32_t rc)
 /* CODE A FUNCTION THAT USES THE BITPACK GET AND CALLS THE RESPECTIVE FUNCTION WITH ALL OF THE PARAMETERS NEEDED*/
 void conditional_move(Memory memory, uint32_t ra, uint32_t rb, uint32_t rc)
 {
-        fprintf(stderr, "In conditional move function\n");
         assert(memory);
         if (get_register(memory, rc) != 0) {
                 set_register(memory, ra, get_register(memory, rb));
@@ -215,8 +208,8 @@ void conditional_move(Memory memory, uint32_t ra, uint32_t rb, uint32_t rc)
 void load_program(Memory memory, uint32_t rb, uint32_t rc)
 { 
         assert(memory);
-        fprintf(stderr, "In load program function\n");
         uint32_t segmentID = get_register(memory, rb);
+        set_pc(memory, (get_register(memory, rc) - 1));
         if (segmentID != 0) {
                 Seq_T segment = Seq_get(get_segments(memory), segmentID);
                 Seq_T duplicate_segment = Seq_new(Seq_length(segment));
@@ -224,12 +217,9 @@ void load_program(Memory memory, uint32_t rb, uint32_t rc)
                         uint32_t element = (uint32_t)(uintptr_t)Seq_get(segment, i);
                         Seq_addhi(duplicate_segment, (void *)(uintptr_t)(element));
                 }
-                /* do not unmap 0 */
-                // segment_unmap(memory, 0);
                 Seq_free(Seq_get(get_segments(memory), 0));
                 set_segments(memory, 0, duplicate_segment);
-        }        
-        set_pc(memory, get_register(memory, rc));
+        } 
 }
 
 void load_value(Memory memory, uint32_t ra, uint32_t value)

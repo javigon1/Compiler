@@ -25,7 +25,13 @@ extern void build_div_then_add_test(Seq_T instructions);
 extern void build_divide0_test(Seq_T instructions);
 extern void build_cat_test(Seq_T instructions);
 extern void build_small_cat_test(Seq_T instructions);
-
+extern void build_segmented_store_test(Seq_T instructions);
+extern void build_segmented_load_test(Seq_T instructions);
+extern void build_conditional_test3(Seq_T instructions);
+extern void build_map_test(Seq_T instructions);
+extern void build_unmap_test(Seq_T instructions);
+extern void build_input_test(Seq_T instructions);
+extern void build_nand_test(Seq_T instructions);
 
 
 /* The array `tests` contains all unit tests for the lab. */
@@ -49,7 +55,14 @@ static struct test_info {
         { "div_then_add",       NULL,      "!", build_add_then_div_test},
         { "add_then_div",       NULL,      "!", build_div_then_add_test},
         { "cat_test",           NULL,       "1", build_cat_test},
-        { "small_cat_test",     NULL,       "1", build_small_cat_test}
+        { "small_cat_test",     NULL,       "1", build_small_cat_test},
+        // { "seg_store",          NULL,       "", build_segmented_store_test},
+        { "seg_load",           NULL,       "", build_segmented_load_test}
+        // { "conditional3",       NULL,       "", build_conditional_test3},
+        // { "map",                NULL,       "", build_map_test},
+        // { "unmap",              NULL,       "", build_unmap_test},
+        // { "input",              NULL,       "", build_input_test},
+        // { "nand",               NULL,       "", build_nand_test}
 };
 
   

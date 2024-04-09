@@ -1,5 +1,6 @@
 #include "um.h"
 
+
 int main(int argc, char *argv[])
 {
         (void)argc;
@@ -15,6 +16,8 @@ int main(int argc, char *argv[])
         unsigned numInstructions = st.st_size / 4;
 
         Memory memory = new_memory();
+        assert(memory);
+
         FILE *fp = fopen(argv[1], "r");
         assert(fp);
         /* populate the 0 sequence with the instructions in the file given */
@@ -26,16 +29,13 @@ int main(int argc, char *argv[])
 
         /* iterate until program_length / numInstructions -> should be the same */
         for (set_pc(memory, 0); 
-        (int)get_pc(memory) < Seq_length(Seq_get(get_segments(memory), 0)); 
-             set_pc(memory, (get_pc(memory) + 1))) {
-                /* get the instruction at the given index of the sequence */
+        (int)get_pc(memory) < Seq_length(Seq_get(get_segments(memory), 0));
+             set_pc(memory, get_pc(memory) + 1)) {
                 uint32_t instruction = (uint32_t)(uintptr_t)Seq_get(Seq_get(get_segments(memory), 0), get_pc(memory));
                 execute_instruction(memory, instruction);
-        }       
+        }      
         /* last instruction had to be a halt so in case the user forgets */
         halt(memory);
-        // some sort of memory cleanup - halt exits the program with exit code 0
-        
 
         return EXIT_SUCCESS; 
 }

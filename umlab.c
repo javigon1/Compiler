@@ -312,3 +312,54 @@ void build_small_cat_test(Seq_T stream)
         append(stream, loadval(r7, 6));
         append(stream, CMOV_TEST(r3, r2, r7));
 }
+
+// void build_segmented_store_test(Seq_T stream)
+// {
+
+// }
+
+void build_segmented_load_test(Seq_T stream)
+{
+        append(stream, loadval(r3, 18));
+        append(stream, ACTIVATE_TEST(r1, r3));
+        append(stream, loadval(r2, 98)); /* this is 'b' */
+        append(stream, loadval(r3, 8)); 
+        append(stream, SSTORE_TEST(r1, r3, r2));
+        append(stream, SLOAD_TEST(r5, r1, r3));
+        append(stream, OUT_TEST(r5)); /* output is 'b' */
+        append(stream, loadval(r4, 97)); /* this is 'a' */
+        append(stream, loadval(r3, 14)); 
+        append(stream, SSTORE_TEST(r1, r3, r4));
+        append(stream, SLOAD_TEST(r4, r1, r3));
+        append(stream, OUT_TEST(r4)); /* output is 'a' */
+        append(stream, loadval(r3, 8)); 
+        append(stream, SLOAD_TEST(r4, r1, r3));
+        append(stream, OUT_TEST(r4)); /* output is 'b' */
+        append(stream, INACTIVATE_TEST(r1));
+        append(stream, HALT_TEST());
+}
+
+// void build_conditional_test3(Seq_T stream)
+// {
+        
+// }
+
+// void build_map_test(Seq_T stream)
+// {
+
+// }
+
+// void build_unmap_test(Seq_T stream)
+// {
+        
+// }
+
+// void build_input_test(Seq_T stream)
+// {
+        
+// }
+
+// void build_nand_test(Seq_T stream)
+// {
+
+// }
