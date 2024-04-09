@@ -84,7 +84,7 @@ static inline Um_instruction DIV_TEST(Um_register a, Um_register b, Um_register 
 {
         return three_register(DIV, a, b, c);
 }
-
+ 
 static inline Um_instruction MUL_TEST(Um_register a, Um_register b, Um_register c) 
 {
         return three_register(MUL, a, b, c);

@@ -39,6 +39,7 @@ uint32_t segment_map(Memory memory, uint32_t size)
 {
         assert(memory);
         assert(memory->segments);
+        fprintf(stderr, "SIZE %d\n", size);
         /* check if there is an unmapped ID so we don't have to create another */
         if (Seq_length(memory->unmappedIDs) > 0) {
                 uint32_t segmentID = (uint32_t)(uintptr_t)Seq_remlo(memory->unmappedIDs);
@@ -104,7 +105,13 @@ void set_segments(Memory memory, int index, Seq_T segments)
         }
 }
 
-void set_program_counter(Memory memory, uint32_t value)
+
+uint32_t get_pc(Memory memory)
+{
+        return memory->program_counter;
+}
+
+void set_pc(Memory memory, uint32_t value)
 {
         assert(memory);
         memory->program_counter = value;

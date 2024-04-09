@@ -229,7 +229,7 @@ void load_program(Memory memory, uint32_t rb, uint32_t rc)
         segment_unmap(memory, 0);
         set_segments(memory, 0, duplicate_segment);
 
-        set_program_counter(memory, get_register(memory, rc));
+        set_pc(memory, get_register(memory, rc));
 }
 
 void load_value(Memory memory, uint32_t ra, uint32_t value)

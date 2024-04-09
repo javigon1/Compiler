@@ -5,10 +5,15 @@ int main(int argc, char *argv[])
         (void)argc;
         /* get the size of the file as segments have to be initialized on a
         known size */
+        (void)argc;
+        /* get the size of the file as segments have to be initialized on a
+        known size */
         struct stat st;
+        if (stat(argv[1], &st) != 0) {
         if (stat(argv[1], &st) != 0) {
                 fprintf(stderr, "Error getting file size");
                 return EXIT_FAILURE;
+        } 
         } 
 
         /* contain the size of the file in bytes and divide by 4 to get the 
@@ -25,11 +30,11 @@ int main(int argc, char *argv[])
         // uint32_t program_length = Seq_length(program);
 
         /* iterate until program_length / numInstructions -> should be the same */
-        for (uint32_t i = 0; i < numInstructions; i++) {
+        for (set_pc(memory, 0); 
+        (int)get_pc(memory) < Seq_length(Seq_get(get_segments(memory), 0)); 
+             set_pc(memory, (get_pc(memory) + 1))) {
                 /* get the instruction at the given index of the sequence */
-                Seq_T seq = get_segments(memory);
-                Seq_T seq2 = Seq_get(seq, 0);
-                uint32_t instruction = (uint32_t)(uintptr_t)Seq_get(seq2, i);
+                uint32_t instruction = (uint32_t)(uintptr_t)Seq_get(Seq_get(get_segments(memory), 0), get_pc(memory));
                 /* NEED TO FIND A WAY TO SET i TO THE NEW PROGRAM COUNTER */
                 execute_instruction(memory, instruction);
         }       
