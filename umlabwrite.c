@@ -14,6 +14,17 @@ extern void build_halt_test(Seq_T instructions);
 extern void build_output_test(Seq_T instructions);
 extern void build_load_value_test(Seq_T instructions);
 extern void build_conditional_test(Seq_T instructions);
+extern void build_conditional_test2(Seq_T instructions);
+extern void build_multiply_test(Seq_T instructions);
+extern void build_add_test(Seq_T instructions);
+extern void build_divide_test(Seq_T instructions);
+extern void build_mult_then_add_test(Seq_T instructions);
+extern void build_add_then_mult_test(Seq_T instructions);
+extern void build_add_then_div_test(Seq_T instructions);
+extern void build_div_then_add_test(Seq_T instructions);
+extern void build_divide0_test(Seq_T instructions);
+extern void build_cat_test(Seq_T instructions);
+extern void build_small_cat_test(Seq_T instructions);
 
 
 
@@ -28,7 +39,17 @@ static struct test_info {
         { "halt",               NULL,     "", build_halt_test},
         { "output",             NULL,     "", build_output_test},
         { "load_value",         NULL,     "0", build_load_value_test},
-        { "conditional",        NULL,     "", build_conditional_test}
+        { "conditional",        NULL,      "!", build_conditional_test},
+        { "conditional2",       NULL,      "#", build_conditional_test2},
+        { "add",                NULL,      "z", build_add_test},
+        { "multiply",           NULL,      "@", build_multiply_test},
+        { "divide",             NULL,      "(", build_divide_test},
+        { "mult_then_add",      NULL,      "$", build_mult_then_add_test},
+        { "add_then_mult",      NULL,      "[", build_add_then_mult_test},
+        { "div_then_add",       NULL,      "!", build_add_then_div_test},
+        { "add_then_div",       NULL,      "!", build_div_then_add_test},
+        { "cat_test",           NULL,       "1", build_cat_test},
+        { "small_cat_test",     NULL,       "1", build_small_cat_test}
 };
 
   
