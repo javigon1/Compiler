@@ -322,19 +322,23 @@ void build_segmented_load_test(Seq_T stream)
 {
         append(stream, loadval(r3, 18));
         append(stream, ACTIVATE_TEST(r1, r3));
-        append(stream, loadval(r2, 98)); /* this is 'b' */
+        append(stream, loadval(r2, 98));
         append(stream, loadval(r3, 8)); 
         append(stream, SSTORE_TEST(r1, r3, r2));
         append(stream, SLOAD_TEST(r5, r1, r3));
-        append(stream, OUT_TEST(r5)); /* output is 'b' */
-        append(stream, loadval(r4, 97)); /* this is 'a' */
+        append(stream, OUT_TEST(r5)); /* b */
+        append(stream, loadval(r4, 97)); 
         append(stream, loadval(r3, 14)); 
         append(stream, SSTORE_TEST(r1, r3, r4));
         append(stream, SLOAD_TEST(r4, r1, r3));
-        append(stream, OUT_TEST(r4)); /* output is 'a' */
+        append(stream, OUT_TEST(r4)); /* a */
         append(stream, loadval(r3, 8)); 
         append(stream, SLOAD_TEST(r4, r1, r3));
-        append(stream, OUT_TEST(r4)); /* output is 'b' */
+        append(stream, OUT_TEST(r4)); /* b */
+        append(stream, loadval(r6, 121)); 
+        append(stream, OUT_TEST(r6)); /* y */
+        append(stream, loadval(r5, '\n')); 
+        append(stream, OUT_TEST(r5)); /* \n */
         append(stream, INACTIVATE_TEST(r1));
         append(stream, HALT_TEST());
 }
