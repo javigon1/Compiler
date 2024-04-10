@@ -28,11 +28,20 @@ int main(int argc, char *argv[])
         set_segments(memory, 0, program);
 
         /* iterate until program_length / numInstructions -> should be the same */
+        int instruction_counter = 0;
+        int seq_load_counter = 0;
         for (set_pc(memory, 0); 
         (int)get_pc(memory) < Seq_length(Seq_get(get_segments(memory), 0));
              set_pc(memory, get_pc(memory) + 1)) {
                 uint32_t instruction = (uint32_t)(uintptr_t)Seq_get(Seq_get(get_segments(memory), 0), get_pc(memory));
-                execute_instruction(memory, instruction);
+                uint32_t check = Bitpack_getu(instruction, 4,28);
+                if (check == 1) {
+                        seq_load_counter++;
+                }
+                execute_instruction(memory, instruction); 
+                instruction_counter++;
+                // fprintf(stderr, "Instruction %u being executed\n", instruction_counter);
+                // fprintf(stderr, "Segmented load %u being executed\n", seq_load_counter);
         }      
         /* last instruction had to be a halt so in case the user forgets */
         halt(memory);

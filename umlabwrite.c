@@ -32,6 +32,9 @@ extern void build_map_test(Seq_T instructions);
 extern void build_unmap_test(Seq_T instructions);
 extern void build_input_test(Seq_T instructions);
 extern void build_nand_test(Seq_T instructions);
+extern void build_input_test(Seq_T instructions); 
+extern void build_unmap_test(Seq_T instructions);
+extern void build_load_program(Seq_T instructions);
 
 
 /* The array `tests` contains all unit tests for the lab. */
@@ -57,12 +60,15 @@ static struct test_info {
         { "cat_test",           NULL,       "1", build_cat_test},
         { "small_cat_test",     NULL,       "1", build_small_cat_test},
         // { "seg_store",          NULL,       "", build_segmented_store_test},
-        { "seg_load",           NULL,       "", build_segmented_load_test}
+        { "seg_load",           NULL,       "", build_segmented_load_test},
         // { "conditional3",       NULL,       "", build_conditional_test3},
         // { "map",                NULL,       "", build_map_test},
         // { "unmap",              NULL,       "", build_unmap_test},
         // { "input",              NULL,       "", build_input_test},
         // { "nand",               NULL,       "", build_nand_test}
+        { "input",              NULL,       "", build_input_test},
+        { "unmap",              NULL,       "", build_unmap_test},
+        { "load_program",       NULL,       "", build_load_program}
 };
 
   

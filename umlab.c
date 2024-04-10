@@ -343,6 +343,19 @@ void build_segmented_load_test(Seq_T stream)
         append(stream, HALT_TEST());
 }
 
+void build_load_program(Seq_T stream)
+{
+        append(stream, loadval(r1, 3));
+        append(stream, loadval(r2, 5));
+        append(stream, ACTIVATE_TEST(r1, r2)); 
+        append(stream, loadval(r1, 0)); 
+        append(stream, LOADP_TEST(r1, r2)); 
+        append(stream, SLOAD_TEST(r3, r1, 0));
+        append(stream, OUT_TEST(r3));
+        append(stream, INACTIVATE_TEST(r1));
+        append(stream, HALT_TEST());
+}
+
 // void build_conditional_test3(Seq_T stream)
 // {
         
@@ -353,15 +366,25 @@ void build_segmented_load_test(Seq_T stream)
 
 // }
 
-// void build_unmap_test(Seq_T stream)
-// {
-        
-// }
+void build_unmap_test(Seq_T stream)
+{
+        append(stream, loadval(r4, 100));
+        append(stream, loadval(r1, 48));
+        for (int i = 0; i < 50; i++) {
+                append(stream, ACTIVATE_TEST(r2, r4));
+                append(stream, INACTIVATE_TEST(r2));
+                append(stream, ADD_TEST(r6, r2, r1));
+                append(stream, OUT_TEST(r6));
+        }
+        append(stream, HALT_TEST());
+}
 
-// void build_input_test(Seq_T stream)
-// {
-        
-// }
+void build_input_test(Seq_T stream)
+{       
+        append(stream, IN_TEST(r3));
+        append(stream, OUT_TEST(r3));
+        append(stream, HALT_TEST());
+}
 
 // void build_nand_test(Seq_T stream)
 // {

@@ -3,9 +3,13 @@
 #define NUM_REGISTERS 8
 
 struct Memory {
+        /* sequence of sequence of unint32_ts */
         Seq_T segments;
+        /* sequence of uint32_t values that correspond to unmapped IDs */
         Seq_T unmappedIDs;
+        /* counts what instruction we are on */
         uint32_t program_counter;
+        /* array of registers of particular size */
         uint32_t registers[NUM_REGISTERS];
 };
 
