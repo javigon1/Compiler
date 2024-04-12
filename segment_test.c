@@ -1,25 +1,36 @@
 #include "memory.h"
 
+void test_map_segment();
+void test_unmap_segment();
+
 int main()
 {
-        Memory memory;
-        memory.segments = Seq_new(0);
-        memory.unmappedIDs = Seq_new(0);
+        test_map_segment();
+        test_unmap_segment();
+}
 
-        Seq_addhi(memory.unmappedIDs, (void *)(uintptr_t)1);
-        Seq_addhi(memory.unmappedIDs, (void *)(uintptr_t)2);
-        Seq_addhi(memory.unmappedIDs, (void *)(uintptr_t)3);
+void test_map_segment()
+{
+        Memory memory = new_memory();
+        uint32_t segmentID = segment_map(memory, 10);
+        assert(segmentID == 0);
+        Seq_T segments = get_segments(memory);
+        assert(Seq_length(segments) == 1);
+        Seq_T segment = Seq_get(segments, 0);
+        assert(Seq_length(segment) == 10);
+        free_memory(memory);
+}
 
-        uint32_t mapped1 = segment_map(memory);
-        uint32_t mapped2 = segment_map(memory);
-        uint32_t mapped3 = segment_map(memory);
-
-        printf("Mapped Segment IDs: %u, %u, %u\n", mapped1, mapped2, mapped3);
-
-        /* Check if the unmappedIDs sequence is empty */
-        printf("Unmapped IDs Length: %d\n", Seq_length(memory.unmappedIDs));
-
-        Seq_free(&memory.segments);
-        Seq_free(&memory.unmappedIDs);
-        return 0;
+void test_unmap_segment()
+{   
+        Memory memory = new_memory();
+        uint32_t segmentID = segment_map(memory, 10);
+        assert(segmentID == 0);
+        Seq_T segments = get_segments(memory);
+        assert(Seq_length(segments) == 1);
+        Seq_T segment = Seq_get(segments, 0);
+        assert(Seq_length(segment) == 10);
+        segment_unmap(memory, 0);
+        assert(Seq_length(segments) == 1);
+        free_memory(memory);
 }

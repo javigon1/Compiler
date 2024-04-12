@@ -1,3 +1,12 @@
+/*
+ *     instructions.c
+ *     Javier Gonzalez (jgonza20) and Jordan Pittignano (jpitti01)
+ *     4/11/24
+ *     um
+ *
+ *     TODO: summary
+ */
+
 #include "instructions.h"
 #include "memory.h"
 
@@ -66,15 +75,16 @@ void execute_instruction(Memory memory, uint32_t instruction)
 }
 
 
-void addition(Memory memory, uint32_t ra, uint32_t rb, uint32_t rc) {
-
+void addition(Memory memory, uint32_t ra, uint32_t rb, uint32_t rc) 
+{
+        
         assert(memory);
         /* get what is in register b and c */
         uint32_t b = get_register(memory, rb);
         uint32_t c = get_register(memory, rc);
 
         /* arithmetic for addition - mod 2^32 */
-        uint32_t result = (b + c) % UINT32_MAX;
+        uint32_t result = (b + c);
 
         /* put the result of the addition in register a */
         set_register(memory, ra, result);
@@ -83,12 +93,13 @@ void addition(Memory memory, uint32_t ra, uint32_t rb, uint32_t rc) {
 
 void multiplication(Memory memory, uint32_t ra, uint32_t rb, uint32_t rc)
 {
+        
         assert(memory);
         /* get the values in the respective registers */
         uint32_t b = get_register(memory, rb);
         uint32_t c = get_register(memory, rc);
         /* multiply them and mod 2^32 */
-        uint32_t result = (b * c) % UINT32_MAX;
+        uint32_t result = (b * c);
         /* save result in ra */
         set_register(memory, ra, result);
 }
@@ -137,7 +148,6 @@ void halt(Memory memory)
 void output(Memory memory, uint32_t rc)
 {
         assert(memory);
-        /* print to stdout the value stored at register rc */
         putchar(get_register(memory, rc));
 }
 
@@ -163,19 +173,19 @@ void segmented_load(Memory memory, uint32_t ra, uint32_t rb, uint32_t rc)
         uint32_t segmentID = get_register(memory, rb);
         uint32_t offset = get_register(memory, rc);
         Seq_T segment = Seq_get(get_segments(memory), segmentID);
-        uint32_t value = *((uint32_t*)Seq_get(segment, offset));
+        uint32_t value = (uint32_t)(uintptr_t)Seq_get(segment, offset);
         set_register(memory, ra, value);
 }
 
 
 void segmented_store(Memory memory, uint32_t ra, uint32_t rb, uint32_t rc)
 {
-        assert(memory);
+        assert(memory);     
         uint32_t value = get_register(memory, rc);
         uint32_t segmentID = get_register(memory, ra);
         uint32_t offset = get_register(memory, rb);
         Seq_T segment = Seq_get(get_segments(memory), segmentID);
-        *((uint32_t *)Seq_get(segment, offset)) = value;    
+        Seq_put(segment, offset, (void *)(uintptr_t)value);  
 }
 
 
@@ -195,7 +205,7 @@ void unmap_segment(Memory memory, uint32_t rc)
         segment_unmap(memory, get_register(memory, rc));
 }
 
-/* CODE A FUNCTION THAT USES THE BITPACK GET AND CALLS THE RESPECTIVE FUNCTION WITH ALL OF THE PARAMETERS NEEDED*/
+
 void conditional_move(Memory memory, uint32_t ra, uint32_t rb, uint32_t rc)
 {
         assert(memory);
@@ -206,30 +216,20 @@ void conditional_move(Memory memory, uint32_t ra, uint32_t rb, uint32_t rc)
 
 
 void load_program(Memory memory, uint32_t rb, uint32_t rc)
-{
+{ 
         assert(memory);
         uint32_t segmentID = get_register(memory, rb);
-        // fprintf(stderr, "RB: %d\n", rb);
-        // fprintf(stderr, "RC: %d\n", rc);
-        // fprintf(stderr, "Value of ID %u\n", segmentID);
-        Seq_T segment2 = Seq_get(get_segments(memory), 0);
-        // fprintf(stderr, "ERROR\n");
-        Seq_T segment = Seq_get(get_segments(memory), segmentID);
-
-        Seq_T duplicate_segment = Seq_new(Seq_length(segment));
-        for (int i = 0; i < Seq_length(segment); i++) {
-                uint32_t element = (uint32_t)(uintptr_t)Seq_get(segment, i);
-                // fprintf(stderr, "Value of i: %d\n", i);
-                // fprintf(stderr, "ELEMENT: %d\n", element);
-                Seq_addhi(duplicate_segment, (void *)(uintptr_t)(element));
-        }
-
-        (void)segment2;
-
-        segment_unmap(memory, 0);
-        set_segments(memory, 0, duplicate_segment);
-
-        set_pc(memory, get_register(memory, rc));
+        set_pc(memory, (get_register(memory, rc)));
+        if (segmentID != 0) {
+                Seq_T segment = Seq_get(get_segments(memory), segmentID);
+                Seq_T duplicate_segment = Seq_new(Seq_length(segment));
+                for (int i = 0; i < Seq_length(segment); i++) {
+                        uint32_t element = (uint32_t)(uintptr_t)Seq_get(segment, i);
+                        Seq_addhi(duplicate_segment, (void *)(uintptr_t)(element));
+                }
+                Seq_free(Seq_get(get_segments(memory), 0));
+                set_segments(memory, 0, duplicate_segment);
+        } 
 }
 
 void load_value(Memory memory, uint32_t ra, uint32_t value)

@@ -8,11 +8,11 @@ CFLAGS  = -g -std=gnu99 -Wall -Wextra -Werror -pedantic $(IFLAGS)
 LDFLAGS = -g -L/comp/40/build/lib -L/usr/sup/cii40/lib64
 LDLIBS  =  -lbitpack -l40locality -lcii40 -lm
 
-INCLUDES = $(shell echo *.h) memory.h instructions.h loadProgram.h
+INCLUDES = $(shell echo *.h) memory.h instructions.h loadProgram.h 
 
 ############### Rules ###############
 
-EXECS   = um writetests
+EXECS   = um writetests segment_test
 
 all: $(EXECS)
 
@@ -24,6 +24,9 @@ um: um.o instructions.o memory.o loadProgram.o
 	$(CC) $(LDFLAGS) $^ -o $@ $(LDLIBS)
 
 writetests: umlabwrite.o umlab.o 
+	$(CC) $(LDFLAGS) $^ -o $@ $(LDLIBS)
+
+segment_test: segment_test.o memory.o
 	$(CC) $(LDFLAGS) $^ -o $@ $(LDLIBS)
 
 clean:

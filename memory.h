@@ -1,3 +1,12 @@
+/*
+ *     memory.h
+ *     Javier Gonzalez (jgonza20) and Jordan Pittignano (jpitti01)
+ *     4/11/24
+ *     um
+ *
+ *     TODO: summary
+ */
+
 #ifndef MEMORY_H_INCLUDED
 #define MEMORY_H_INCLUDED
 
@@ -21,5 +30,6 @@ Seq_T get_segments(Memory memory);
 void set_segments(Memory memory, int index, Seq_T segments);
 uint32_t get_pc(Memory memory);
 void set_pc(Memory memory, uint32_t value);
+
 
 #endif
