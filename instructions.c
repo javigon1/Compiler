@@ -26,45 +26,58 @@ void execute_instruction(Memory memory, uint32_t instruction)
         /* simple case-switch function to run the specific function */
         switch(opcode) {
                 case 0:
+                        // fprintf(stderr, "conditional move \n");
                         conditional_move(memory, ra, rb, rc);
                         break; 
                 case 1:
+                        // fprintf(stderr, "segmented load\n");
                         segmented_load(memory, ra, rb, rc);
                         break;
                 case 2:
                         segmented_store(memory, ra, rb, rc);
                         break;
                 case 3:
+                        // fprintf(stderr, "addition\n");
                         addition(memory, ra, rb, rc);
                         break;
                 case 4:
+                        // fprintf(stderr, "multiplication\n");
                         multiplication(memory, ra, rb, rc);
                         break;
                 case 5:
+                        // fprintf(stderr, "division\n");
                         division(memory, ra, rb, rc);
                         break;
                 case 6:
+                        // fprintf(stderr, "nand\n");
                         nand(memory, ra, rb, rc);
                         break;
                 case 7:
+                        // fprintf(stderr, "halt\n");
                         halt(memory);
                         break;
                 case 8:
+                        // fprintf(stderr, "map segment\n");
                         map_segment(memory, rb, rc);
                         break;
                 case 9:
+                        // fprintf(stderr, "unmap segment\n");
                         unmap_segment(memory, rc);
                         break;
                 case 10:
+                        // fprintf(stderr, "output\n");
                         output(memory, rc);
                         break;
                 case 11:
+                        // fprintf(stderr, "intput\n");
                         input(memory, rc);
                         break;
                 case 12:
+                        // fprintf(stderr, "load program\n");
                         load_program(memory, rb, rc);
                         break;
                 case 13:
+                        // fprintf(stderr, "load value\n");
                         load_value(memory, raLV, value);
                         break;
                 default:
@@ -123,6 +136,7 @@ void division(Memory memory, uint32_t ra, uint32_t rb, uint32_t rc)
 
 void nand(Memory memory, uint32_t ra, uint32_t rb, uint32_t rc)
 {
+        
         assert(memory);
         uint32_t b = get_register(memory, rb);
         uint32_t c = get_register(memory, rc);
