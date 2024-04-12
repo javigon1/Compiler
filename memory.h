@@ -1,3 +1,12 @@
+/*
+ *     memory.h
+ *     Javier Gonzalez (jgonza20) and Jordan Pittignano (jpitti01)
+ *     4/11/24
+ *     um
+ *
+ *     TODO: summary
+ */
+
 #ifndef MEMORY_H_INCLUDED
 #define MEMORY_H_INCLUDED
 

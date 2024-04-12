@@ -1,5 +1,15 @@
+/*
+ *     memory.c
+ *     Javier Gonzalez (jgonza20) and Jordan Pittignano (jpitti01)
+ *     4/11/24
+ *     um
+ *
+ *     TODO: summary
+ */
+
 #include "memory.h"
 
+/* constant for number of registers */
 #define NUM_REGISTERS 8
 
 struct Memory {
@@ -43,7 +53,7 @@ uint32_t segment_map(Memory memory, uint32_t size)
 {
         assert(memory);
         assert(memory->segments);
-        /* check if there is an unmapped ID so we don't have to create another */
+        /* check if there unmapped ID so we don't have to create another */
         if (Seq_length(memory->unmappedIDs) > 0) {
                 uint32_t segmentID = (uint32_t)(uintptr_t)Seq_remlo(memory->unmappedIDs);
                 Seq_T segment = Seq_new(size);
@@ -70,12 +80,31 @@ void segment_unmap(Memory memory, uint32_t segmentID)
         assert(memory);
         assert(memory->segments);
         assert(memory->unmappedIDs);
-                     
-        /* set the unmapped segment to NULL and place its ID into unmappedIDs */
-        Seq_T segment = Seq_put(memory->segments, segmentID, NULL);
-        Seq_free(&segment);
-        Seq_addhi(memory->unmappedIDs, (void *)(uintptr_t)segmentID);    
+
+        fprintf(stderr, "Segment ID: %d\n", segmentID);
+
+        if (segmentID != 0) {
+                /* set the unmapped segment to NULL and place its ID into unmappedIDs */
+                Seq_T segment = Seq_put(memory->segments, segmentID, NULL);
+                Seq_free(&segment);
+                Seq_addhi(memory->unmappedIDs, (void *)(uintptr_t)segmentID);
+        }                 
 }
+
+// void segment_unmap(Memory memory, uint32_t segmentID)
+// {
+//         assert(memory);
+//         assert(memory->segments);
+//         assert(memory->unmappedIDs);
+
+//         Seq_T segment = Seq_get(memory->segments, segmentID);
+//         if (segment != NULL) {
+//                 Seq_free(&segment);
+//                 Seq_put(memory->segments, segmentID, NULL);
+//                 Seq_addhi(memory->unmappedIDs, (void *)(uintptr_t)segmentID);
+
+//         }                        
+// }
 
 
 uint32_t get_register(Memory memory, uint32_t register_index)

@@ -1,3 +1,12 @@
+/*
+ *     instructions.c
+ *     Javier Gonzalez (jgonza20) and Jordan Pittignano (jpitti01)
+ *     4/11/24
+ *     um
+ *
+ *     TODO: summary
+ */
+
 #include "instructions.h"
 #include "memory.h"
 
@@ -21,7 +30,7 @@ void execute_instruction(Memory memory, uint32_t instruction)
                         conditional_move(memory, ra, rb, rc);
                         break; 
                 case 1:
-                        fprintf(stderr, "segmented load\n");
+                        // fprintf(stderr, "segmented load\n");
                         segmented_load(memory, ra, rb, rc);
                         break;
                 case 2:
@@ -44,15 +53,15 @@ void execute_instruction(Memory memory, uint32_t instruction)
                         nand(memory, ra, rb, rc);
                         break;
                 case 7:
-                        fprintf(stderr, "halt\n");
+                        // fprintf(stderr, "halt\n");
                         halt(memory);
                         break;
                 case 8:
-                        fprintf(stderr, "map segment\n");
+                        // fprintf(stderr, "map segment\n");
                         map_segment(memory, rb, rc);
                         break;
                 case 9:
-                        fprintf(stderr, "unmap segment\n");
+                        // fprintf(stderr, "unmap segment\n");
                         unmap_segment(memory, rc);
                         break;
                 case 10:
@@ -64,7 +73,7 @@ void execute_instruction(Memory memory, uint32_t instruction)
                         input(memory, rc);
                         break;
                 case 12:
-                        fprintf(stderr, "load program\n");
+                        // fprintf(stderr, "load program\n");
                         load_program(memory, rb, rc);
                         break;
                 case 13:
@@ -153,7 +162,6 @@ void halt(Memory memory)
 void output(Memory memory, uint32_t rc)
 {
         assert(memory);
-        /* print to stdout the value stored at register rc */
         putchar(get_register(memory, rc));
 }
 
@@ -176,17 +184,10 @@ void input(Memory memory, uint32_t rc)
 void segmented_load(Memory memory, uint32_t ra, uint32_t rb, uint32_t rc)
 {
         assert(memory);
-        // fprintf(stderr, "register ra %u\n", ra);
-        // fprintf(stderr, "register rb %u\n", rb);
-        // fprintf(stderr, "register rc %u\n", rc);
         uint32_t segmentID = get_register(memory, rb);
         uint32_t offset = get_register(memory, rc);
-        // fprintf(stderr, "offset %u\n", offset);
         Seq_T segment = Seq_get(get_segments(memory), segmentID);
-        // fprintf(stderr, "length of segment read %d\n", Seq_length(segment));
-        // fprintf(stderr, "ID accessed in the sequence %u\n", segmentID);
         uint32_t value = (uint32_t)(uintptr_t)Seq_get(segment, offset);
-        // fprintf(stderr, "value we just stored: %d\n", value);
         set_register(memory, ra, value);
 }
 
@@ -218,7 +219,7 @@ void unmap_segment(Memory memory, uint32_t rc)
         segment_unmap(memory, get_register(memory, rc));
 }
 
-/* CODE A FUNCTION THAT USES THE BITPACK GET AND CALLS THE RESPECTIVE FUNCTION WITH ALL OF THE PARAMETERS NEEDED*/
+
 void conditional_move(Memory memory, uint32_t ra, uint32_t rb, uint32_t rc)
 {
         assert(memory);
@@ -230,11 +231,9 @@ void conditional_move(Memory memory, uint32_t ra, uint32_t rb, uint32_t rc)
 
 void load_program(Memory memory, uint32_t rb, uint32_t rc)
 { 
-        /* FIX THIS FUNCTION */
-        /* could be an issue with program counter */
         assert(memory);
         uint32_t segmentID = get_register(memory, rb);
-        set_pc(memory, (get_register(memory, rc) - 1));
+        set_pc(memory, (get_register(memory, rc)));
         if (segmentID != 0) {
                 Seq_T segment = Seq_get(get_segments(memory), segmentID);
                 Seq_T duplicate_segment = Seq_new(Seq_length(segment));

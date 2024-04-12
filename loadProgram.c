@@ -1,3 +1,12 @@
+/*
+ *     loadProgram.c
+ *     Javier Gonzalez (jgonza20) and Jordan Pittignano (jpitti01)
+ *     4/11/24
+ *     um
+ *
+ *     TODO: summary
+ */
+
 #include "loadProgram.h"
 
 

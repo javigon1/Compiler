@@ -1,18 +1,16 @@
 /*
- * umlab.c
- *
- * Functions to generate UM unit tests. Once complete, this module
- * should be augmented and then linked against umlabwrite.c to produce
- * a unit test writing program.
- *  
- * A unit test is a stream of UM instructions, represented as a Hanson
- * Seq_T of 32-bit words adhering to the UM's instruction format.  
+ *     umlab.c
+ *     Javier Gonzalez (jgonza20) and Jordan Pittignano (jpitti01)
+ *     4/11/24
+ *     um
  * 
- * Any additional functions and unit tests written for the lab go
- * here. 
- *  
+ *     Functions to generate UM unit tests. Once complete, this module
+ *     should be augmented and then linked against umlabwrite.c to produce
+ *     a unit test writing program. A unit test is a stream of UM 
+ *     instructions, represented as a Hanson Seq_T of 32-bit words adhering 
+ *     to the UM's instruction format. Any additional functions and unit 
+ *     tests written for the lab go here. 
  */
-
 
 #include <stdint.h>
 #include <stdio.h>
@@ -290,33 +288,27 @@ void build_div_then_add_test(Seq_T stream)
         append(stream, HALT_TEST());
 }
 
-void build_cat_test(Seq_T stream)
+
+void build_segmented_store_test(Seq_T stream)
 {
-        append(stream, IN_TEST(r1));
-        append(stream, NAND_TEST(r2, r1, r1));
-        append(stream, loadval(r3, 9));
-        append(stream, loadval(r7, 6));
-        append(stream, CMOV_TEST(r3, r7, r2));
-        append(stream, LOADP_TEST(r0, r3));
-        append(stream, OUT_TEST(r1));
-        append(stream, loadval(r7, 0));
-        append(stream, LOADP_TEST(r0, r7));
-        append(stream, HALT_TEST());
+        append(stream, loadval(r0, 0));
+        append(stream, loadval(r1, 1));
+        append(stream, loadval(r2, 2));
+        append(stream, loadval(r3, 10));
+        append(stream, loadval(r4, 50));
+        append(stream, ACTIVATE_TEST(r1, r3));
+        append(stream, SSTORE_TEST(r1, r0, r4));
+        append(stream, SLOAD_TEST(r5, r1, r0));
+        append(stream, OUT_TEST(r5));
+        append(stream, ACTIVATE_TEST(r2, r3));
+        append(stream, loadval(r4, 75));
+        append(stream, SSTORE_TEST(r2, r0, r4));
+        append(stream, SLOAD_TEST(r6, r2, r0));
+        append(stream, OUT_TEST(r6));
+        append(stream, loadval(r7, '\n'));
+        append(stream, OUT_TEST(r7));
+        append(stream, HALT_TEST());   /* CORRECTLY PRINTS 2K */
 }
-
-void build_small_cat_test(Seq_T stream)
-{
-        append(stream, IN_TEST(r1));
-        append(stream, NAND_TEST(r2, r1, r1));
-        append(stream, loadval(r3, 9));
-        append(stream, loadval(r7, 6));
-        append(stream, CMOV_TEST(r3, r2, r7));
-}
-
-// void build_segmented_store_test(Seq_T stream)
-// {
-
-// }
 
 void build_segmented_load_test(Seq_T stream)
 {
@@ -343,18 +335,29 @@ void build_segmented_load_test(Seq_T stream)
         append(stream, HALT_TEST());
 }
 
+
 void build_load_program(Seq_T stream)
 {
-        append(stream, loadval(r1, 3));
-        append(stream, loadval(r2, 5));
-        append(stream, ACTIVATE_TEST(r1, r2)); 
-        append(stream, loadval(r1, 0)); 
-        append(stream, LOADP_TEST(r1, r2)); 
-        append(stream, SLOAD_TEST(r3, r1, 0));
-        append(stream, OUT_TEST(r3));
-        append(stream, INACTIVATE_TEST(r1));
+        append(stream, loadval(r0, 0));
+        append(stream, loadval(r1, 1));
+        append(stream, loadval(r2, 3));
+        append(stream, loadval(r3, 40));
+        append(stream, loadval(r4, 10));
+        append(stream, loadval(r5, 9));
+        append(stream, ACTIVATE_TEST(r1, r4));
+        append(stream, LOADP_TEST(r0, r5));
+        append(stream, HALT_TEST());
+        append(stream, SSTORE_TEST(r1, r0, r3));
+        append(stream, SLOAD_TEST(r6, r1, r0));
+        append(stream, OUT_TEST(r6)); /* CORRECTLY PRINTS '(' */
         append(stream, HALT_TEST());
 }
+
+
+// void build_load_program3(Seq_T stream)
+// {
+
+// }
 
 // void build_conditional_test3(Seq_T stream)
 // {
