@@ -373,6 +373,7 @@ void build_unmap_test(Seq_T stream)
 {
         append(stream, loadval(r4, 100));
         append(stream, loadval(r1, 48));
+
         for (int i = 0; i < 50; i++) {
                 append(stream, ACTIVATE_TEST(r2, r4));
                 append(stream, INACTIVATE_TEST(r2));
@@ -394,3 +395,9 @@ void build_input_test(Seq_T stream)
         append(stream, OUT_TEST(r3));
         append(stream, HALT_TEST());
 }
+
+// void build_nand_test(Seq_T stream)
+// {
+//         append(stream, loadval(r0, 3176660867));
+//         append(stream, loadval(r1, 3176660611));
+// }

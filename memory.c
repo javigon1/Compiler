@@ -65,6 +65,7 @@ uint32_t segment_map(Memory memory, uint32_t size)
                 Seq_put(memory->segments, segmentID, segment);
                 return segmentID;
         } 
+
         Seq_T segment = Seq_new(size);
         for (uint32_t i = 0; i < size; i++) {
                 Seq_addhi(segment, (void *)(uintptr_t)0);
@@ -84,6 +85,8 @@ void segment_unmap(Memory memory, uint32_t segmentID)
 
         if (segmentID != 0) {
                 /* set the unmapped segment to NULL and place its ID into unmappedIDs */
+                // Seq_T segment = Seq_put(memory->segments, segmentID, NULL);
+                // Seq_free(&segment);
                 Seq_put(memory->segments, segmentID, NULL);
                 Seq_addhi(memory->unmappedIDs, (void *)(uintptr_t)segmentID);
         }                 
